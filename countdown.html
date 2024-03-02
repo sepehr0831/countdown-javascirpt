@@ -1,0 +1,251 @@
+<!-- Display the countdown timer in an element -->
+<body>
+    <br>
+    <h2 id="title">Project of JavaScript</h2>
+    <br>
+    <h3 id="des">JavaScript Counter</h3>
+    <br>
+    <h4 id="des"></h4>
+    <div id="demo"></div>
+    <br>
+    <br>
+    <button id="start" onclick="start()">Start</button>
+    <br>
+    <br>
+    <button id="Pause" onclick="pause()" >Pause</button>
+    <br>
+    <br>
+    <button id="button" onclick="reset()">Reset</button>
+    <br>
+    <br>
+    <h4 id="fuck"></h4>
+
+ 
+</body>
+
+
+<style>
+
+    body{
+        background-color: rgb(69, 188, 197);
+        margin-left: 7cm;
+        margin-right: 7cm;
+        margin-top: 1cm;
+
+    }
+
+    #title{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+   
+    #demo{
+        font-size:xx-large;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-style: italic;
+        text-align: center;
+        border: 1mm solid black;
+        margin-left: 3cm;
+        margin-right: 3cm;
+
+        margin-bottom: 1cm;
+        transition-duration: 400ms;
+
+    }   
+    #button{
+        font-size: xx-large;
+        margin-left:3cm;
+        width: 80pt;
+        background-color: rgba(53, 23, 226, 0.737);
+
+    }
+    #start{
+        font-size: xx-large;
+        width: 80pt;
+        margin-left:3cm;
+        background-color: rgba(4, 155, 79, 0.737);
+
+    }
+    #start:disabled{
+            border: 1px solid #999999;
+            background-color: #cccccc;
+            color: #666666;
+            transition-duration: 400ms;
+        }
+    #pause{
+        font-size: xx-large;
+        margin-left:3cm;
+        background-color: rgba(226, 23, 23, 0.737);
+
+
+    }
+
+    #button:hover{
+        color: rgb(52, 193, 240);
+        transition-duration: 400ms;
+        box-shadow: 3cm,3cm,black;
+    }
+    #start:hover{
+        color: rgb(12, 230, 33);
+        transition-duration: 400ms;
+    }
+    #pause:hover{
+        color: rgb(255, 0, 0);
+        transition-duration: 400ms;
+
+    }
+
+    #des{
+        text-align: center;
+        transition-duration: 400ms;
+    }
+   
+
+    h2{
+        color: rgb(0, 0, 0);
+        text-align: center;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+    }
+
+    #fuck {
+        margin-left: 3cm;
+        font-size: larger;
+        font-family: Arial, Helvetica, sans-serif;
+        font-style: italic;
+        font-weight: bold;
+        color:black
+
+    }
+
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
+<script>
+// Set the date we're counting down to
+
+var x;
+var minutes;
+var second;
+var distance;
+
+function start(){
+    distance = prompt("set you seconds")
+    if(distance){
+        minutes = Math.floor(distance/60);
+        second = Math.floor((distance%60));
+
+        // Update the count down every 1 second
+        x = setInterval(function() {
+        second--
+        Cookies.set("state","started")
+        Cookies.set("min",minutes)
+        Cookies.set("sec",second)
+        if(second==0){
+            second=59;
+            minutes-=1
+        }
+        if(minutes==-1 && second==59){
+            minutes=0
+            second=0
+            clearInterval(x);
+            document.getElementById("fuck").innerHTML = "Your time EXPIRED"
+            var l = document.getElementById("fuck")
+            setInterval(function(){
+                //for blinking the text
+                l.style.display = (l.style.display == 'none' ? '':'none')
+            },400)
+            document.body.style.backgroundColor = "green"
+            var audio = new Audio("Ding-sound-effect.mp3");
+            audio.play();
+        }
+        document.getElementById("demo").innerHTML =  minutes + "m " + second + "s ";
+
+        // If the count down is finished, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+        }
+        if(Cookies.get("state")=="started"){
+            document.getElementById("start").disabled = true
+        }
+        }, 1000);
+                }
+    else{
+        alert("please enter your second")
+    }}
+   
+
+
+function pause(){
+
+   
+    if(Cookies.get("state")=="started"){
+        clearInterval(x)
+        Cookies.set("state","paused");
+        if(Cookies.get("state")=="pused"){
+            document.getElementById("start").disabled = true
+        }
+
+    }
+    else if(Cookies.get("state")=="paused"){
+
+    minutes =Number(Cookies.get("min"));
+    second  = Number(Cookies.get("sec"));
+
+    x = setInterval(function() {
+
+        Cookies.set("min",minutes)
+        Cookies.set("sec",second)
+        Cookies.set("state","countinue");
+
+        if(Cookies.get("state")=="pused"){
+            document.getElementById("start").disabled = true
+        }
+
+        second--
+        if(second==0){
+            second=59;
+            minutes-=1
+        }
+        if(minutes==-1 && second==59){
+            minutes=0
+            second=0
+            clearInterval(x);
+            document.getElementById("des").innerHTML = "Your time EXPIRED"
+        }
+        document.getElementById("demo").innerHTML =  minutes + "m " + second + "s ";
+
+        // If the count down is finished, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+        }
+        }, 1000);
+    }
+
+    else if(Cookies.get("state") == "countinue"){
+        clearInterval(x)
+        Cookies.set("state","paused");
+    }}
+
+function reset(){
+    clearInterval(x);
+    minutes = 0;
+    second= 0;
+    document.getElementById("demo").innerHTML =  minutes + "m " + second + "s ";
+    document.getElementById("start").disabled = false
+    document.body.style.backgroundColor = " rgb(69, 188, 197)";
+    document.getElementById("fuck").innerHTML = ""
+
+
+
+}
+
+  
+
+
+
+
+</script>
